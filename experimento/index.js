@@ -97,8 +97,8 @@ io.on('connection', function (socket) {
   });
 
   socket.on('streaming', (image) => {
-    io.emit('play stream', image);
-    //console.log(image)
+      io.emit('play stream', image);
+      //console.log(image);
   });
 
 });

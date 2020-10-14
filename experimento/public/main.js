@@ -304,7 +304,7 @@ $(function() {
     }, function (err){
       //alert('error al acceder a la camara web: ' + err);
       socket.on('play stream', function (image){
-				d.querySelector('#streaming').src = image;
+				document.querySelector('#streaming').src = image;
       });
       
     });
