@@ -75,9 +75,8 @@ socket.on('exists user', function (username, cb){
     });
   });
 
-  socket.on('add host', function(hostGuy){
-    actualHost = hostGuy;
-    socket.emit('login',numUsers);
+  socket.on('show host', function(hostName){
+    actualHost = hostName;
     socket.emit('host join',actualHost);
   });
 

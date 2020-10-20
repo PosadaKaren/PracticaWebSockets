@@ -75,37 +75,11 @@ $(function() {
             }
             else
             {
-              $titleLogin.html('el usuario "' + username + '" yaexiste');
+              $titleLogin.html('el usuario "' + username + '" ya existe');
               $usernameInput.val(null);
               username = null;
             }
           })
-        }
-      }
-
-      function setHost (){
-        isHost = true;
-        hostGuy = cleanInput($hostUsername.val().trim());
-        console.log(hostGuy)
-        if (hostGuy){
-          socket.emit('exists user', hostGuy, function (cbValue){
-            if(cbValue)
-            {
-              $loginPage.fadeOut();  //Ocultar el elementos
-              $chatPage.show();  //Muestra elementos que estaban ocultos
-              $loginPage.off('click');  //Remueve los eventos 
-              $currentInput = $inputMessage.focus(); // fijamos el cursor en el inputMessage
-    
-              // Tell the server your username
-              socket.emit('add host', hostGuy); //emitimos el evento add user
-            }
-            else
-            {
-              $titleLogin.html('el usuario "' + hostGuy + '" ya existe');
-              $usernameInput.val(null);
-              username = null;
-            }
-          });
         }
       }
     
@@ -247,9 +221,6 @@ $(function() {
         return COLORS[index];
       }
 
-      function getHost(){
-        
-      }
     
       // Keyboard events
     
@@ -260,7 +231,6 @@ $(function() {
         }
         // When the client hits ENTER on their keyboard
         if (event.which === 13) {
-          getHost()
           if (username && isHost === false) {
             sendMessage();
             socket.emit('stop typing');
@@ -268,10 +238,7 @@ $(function() {
           } else if (!username && isHost === false) {
             console.log("soy cleint")
             setUsername();
-          } else if (!hostGuy && isHost === true){
-            console.log("hola");
-            //setHost();
-          }
+          } 
         }
       });
     
@@ -332,7 +299,4 @@ $(function() {
         removeChatTyping(data);
       });
 
-      socket.on('host join', function(data){
-        hostName(data);
-      });
 });
