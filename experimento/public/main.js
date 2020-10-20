@@ -25,6 +25,7 @@ $(function() {
     var typing = false;
     var lastTypingTime;
     var $currentInput = $usernameInput.focus();
+    var isHost = false;
 		 
     
   
@@ -293,21 +294,19 @@ $(function() {
       navigator.msGetUserMedia
     );
 
-    navigator.streaming({
-      video : true,
-      audio : false
-    }, function (stream){
-      startCamera = true;
-      video.srcObject = stream;
-              video.onloadedmetadata = function(e){
-              video.play()};
-    }, function (err){
-      //alert('error al acceder a la camara web: ' + err);
-      socket.on('play stream', function (image){
-				document.querySelector('#streaming').src = image;
+      function streamVideo(context, canvas, video)
+    {
+      var outputStream = canvas.toDataURL('image/jpeg', 0.2);
+      context.drawImage(video, 0, 0);
+
+      if(startCamera){
+        socket.emit('streaming', outputStream);
+      }
+
+      playVideo(function (){
+        streamVideo(context, canvas, video);
       });
-      
-    });
+    }
 
     window.playVideo = (function (cb){
       return window.requestAnimationFrame ||
@@ -319,24 +318,27 @@ $(function() {
         };
     })();
 
-    function streamVideo(context, canvas, video)
-    {
-      var outputStream = canvas.toDataURL('image/jpeg', 0.2);
-      context.drawImage(video, 0, 0);
-
-      if(startCamera){
-        socket.emit('streaming', outputStream);
-      }
-
-      playVideo(function (){
-        streamVideo(context, canvas, video);
-      })
-    }
-
     window.addEventListener('load', function (){
       video.autoplay = true;
       video.style.display = 'none';
       streamVideo(context, canvas, video);
     })
+
+    navigator.streaming({
+      video : true,
+      audio : false
+    }, function (stream){
+      startCamera = true;
+      isHost = true;
+      video.srcObject = stream;
+              video.onloadedmetadata = function(e){
+              video.play()};
+    }, function (err){
+      //alert('error al acceder a la camara web: ' + err);
+      alert('Ya hay un host transmitiendo');
+      socket.on('play stream', function (image){
+        document.querySelector('#streaming').src = image;
+      });
+    });
 
   });
