@@ -1,2 +1,3 @@
+#Archivos que vamos a ignorar ya que se van a instalar desde DockerFile
 node_modules
 npm-debug.log
